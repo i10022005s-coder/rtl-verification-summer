@@ -1,0 +1,14 @@
+# Simulation outputs
+*.out
+*.vcd
+*.vvp
+*.fst
+
+# Build/simulation directories
+sim/*.out
+sim/*.vcd
+sim/*.vvp
+sim/*.fst
+
+# VS Code local settings, optional
+.vscode/
