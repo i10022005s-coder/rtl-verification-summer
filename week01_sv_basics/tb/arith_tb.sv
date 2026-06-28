@@ -56,19 +56,13 @@ module test;
         end    
     endfunction
     function automatic logic [1:0] expected_result_full_adder(input logic ain, input logic bin, input logic cin);
+        logic summ_exp;
+        logic cout_exp;
         begin
             expected_result_full_adder = 2'b00;
-            if (ain ^ bin ^ cin) begin
-                expected_result_full_adder = 2'b01;
-            end
-            else begin
-                if ((ain & bin) | (ain & cin) | (cin & bin)) begin
-                    expected_result_full_adder = expected_result_full_adder + 2'b10;
-                end
-            end
-            if ((ain & bin) | (ain & cin) | (cin & bin)) begin
-                expected_result_full_adder = expected_result_full_adder + 2'b10;
-            end
+            summ_exp = ain ^ bin ^ cin;
+            cout_exp = (ain & bin) | (cin & bin) | (ain & cin);
+            expected_result_full_adder = {cout_exp, summ_exp};
         end    
     endfunction
     function automatic logic [4:0] expected_result_adder4(input logic [3:0] ain, input logic [3:0] bin, input logic cin);
