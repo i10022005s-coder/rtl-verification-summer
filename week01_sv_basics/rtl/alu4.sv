@@ -4,53 +4,65 @@ module alu4 #(parameter width = 4) (
     output logic [width-1:0] result,
     output logic carry, overflow, zero
 );
-    logic [4:0] tmp;
+
+    localparam logic [3:0] ALU_ADD  = 4'b0000;
+    localparam logic [3:0] ALU_SUB  = 4'b0001;
+    localparam logic [3:0] ALU_AND  = 4'b0010;
+    localparam logic [3:0] ALU_OR   = 4'b0011;
+    localparam logic [3:0] ALU_XOR  = 4'b0100;
+    localparam logic [3:0] ALU_SLT  = 4'b0101;
+    localparam logic [3:0] ALU_SLTU = 4'b0110;
+    localparam logic [3:0] ALU_SLL  = 4'b0111;
+    localparam logic [3:0] ALU_SRL  = 4'b1000;
+    localparam logic [3:0] ALU_SRA  = 4'b1001;
+
+    logic [width:0] tmp;
     always @(*) begin
         result = '0;
         carry = 1'b0;
         zero = 1'b0;
         overflow = 1'b0;
         case (op)
-            4'b0000: begin //ADD
+            ALU_ADD: begin //ADD
                 tmp = a + b;
-                result = tmp[3:0];
-                carry = tmp[4];
-                overflow = (~(a[3] ^ b[3])) & (result[3] ^ a[3]);
+                result = tmp[width-1:0];
+                carry = tmp[width];
+                overflow = (~(a[width-1] ^ b[width-1])) & (result[width-1] ^ a[width-1]);
             end
-            4'b0001: begin //SUB
+            ALU_SUB: begin //SUB
                 result = a - b;
                 carry = (a < b);
-                overflow = (a[3] ^ b[3]) & (result[3] ^ a[3]);
-                zero = (result == 4'b0000);
+                overflow = (a[width-1] ^ b[width-1]) & (result[width-1] ^ a[width-1]);
             end
-            4'b0010: begin //AND
+            ALU_AND: begin //AND
                 result = a & b;
             end
-            4'b0011: begin //OR
+            ALU_OR: begin //OR
                 result = a | b;
             end
-            4'b0100: begin //XOR
+            ALU_XOR: begin //XOR
                 result = a ^ b;
             end 
-            4'b0101: begin //SLT
+            ALU_SLT: begin //SLT
                 result = ($signed(a) < $signed(b)) ? 'b0001 : '0;
             end 
-            4'b0110: begin //SLTU
+            ALU_SLTU: begin //SLTU
                 result = (a < b) ? 'b0001 : '0;
             end
-            4'b0111: begin //SLL
+            ALU_SLL: begin //SLL
                 result = a << 1;
             end
-            4'b1000: begin //SRL
+            ALU_SRL: begin //SRL
                 result = a >> 1;
             end
-            4'b1001: begin //SRA
+            ALU_SRA: begin //SRA
                 result = $signed(a) >>> 1;
             end
             default: begin
                 result = '0;
             end
         endcase
+        zero = (result == '0);
     end
     
 endmodule

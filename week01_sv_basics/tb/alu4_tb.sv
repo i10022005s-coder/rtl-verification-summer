@@ -29,7 +29,6 @@ module test;
                     expected_result[3:0] = ain - bin;
                     expected_result[4] = ain < bin;
                     expected_result[5] = (ain[3] ^ bin[3]) & (expected_result[3] ^ ain[3]);
-                    expected_result[6] = (expected_result[3:0] == 4'b0000);
                 end
                 4'b0010: expected_result[3:0] = ain & bin;
                 4'b0011: expected_result[3:0] = ain | bin;
@@ -41,6 +40,7 @@ module test;
                 4'b1001: expected_result[3:0] = $signed(ain) >>> 1;
                 default: expected_result = '0;
             endcase
+            expected_result[6] = (expected_result[3:0] == 4'b0000);
         end
     endfunction
 
@@ -54,7 +54,7 @@ module test;
             #1;
             expected = expected_result(ain, bin, opin);
             actual = {zero, overflow, carry, result};
-            if (actual != expected) begin
+            if (actual !== expected) begin
                 $error("Fail: a = %b b = %b op = %b expected = %b, (zero, overflow, carry, result) = %b", ain, bin, opin, expected, actual);
                 errors = errors + 1;
             end
@@ -69,7 +69,7 @@ module test;
         $display("Alu4 test");
         for (int i = 0; i < 16; i++) begin
             for (int j = 0; j < 16; j++) begin
-                for (int k = 0; k < 10; k++) begin
+                for (int k = 0; k < 16; k++) begin
                     check_alu4(i, j, k);
                 end
             end
