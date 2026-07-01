@@ -43,6 +43,8 @@ module test;
     end
 
     initial begin
+        $dumpfile("seq_blocks_tb.vcd");
+        $dumpvars(0, test);
         errors = 0;
         pre_q_register_en = '0;
         pre_q_shift_register = '0;
@@ -92,7 +94,7 @@ module test;
         #5;
         serial_in = 1'b0; #5;
         if (q_shift_register !== 4'b0010) begin
-            $error("Fail shift_register: q = %b expected = %b", q_shift_register, 4'b0001);
+            $error("Fail shift_register: q = %b expected = %b", q_shift_register, 4'b0010);
                 errors = errors + 1;
         end
         #5;
@@ -102,7 +104,7 @@ module test;
         enable = 1'b1;
         serial_in = 1'b1; #5;
         if (q_shift_register !== 4'b0101) begin
-            $error("Fail shift_register: q = %b expected = %b", q_shift_register, 4'b0001);
+            $error("Fail shift_register: q = %b expected = %b", q_shift_register, 4'b0101);
             errors = errors + 1;
         end
         #5;
@@ -117,8 +119,8 @@ module test;
 
         reset = 1'b0;
         for (int i = 0; i < 10; i++) begin
-            if (count !== i) begin
-                $error("Fail counter: count = %b expected = %b", q_shift_register, i);
+            if (count !== i[3:0]) begin
+                $error("Fail counter: count = %b expected = %b", count, i[3:0]);
                 errors = errors + 1;
             end
             @(posedge clock);
