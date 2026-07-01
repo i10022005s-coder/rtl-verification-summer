@@ -82,3 +82,11 @@ What this module synthesizes into
 * `zero` can be implemented as NOR of all result bits.
 * `carry` and `overflow` are additional flag-generation logic.
 
+Day 5 Последовательностные схемы
+
+rtl/dff.sv - синтезирует D-триггер со сбросом reset
+rtl/register_en.sv - синтезирует 4-bit регистр со сбросом reset и с сигналом разрешения unable 
+rtl/shift_register.sv - синтезирует 4-bit регистр сдвига со сбросом reset и с сигналом разрешения unable
+rtl/counter_modN.sv - синтезирует счётчик по модулю, задаваемому параметром N (по-умолчанию 10), со сбросом reset и сигналом запрета счёта unable
+tb/seq_blocks.sv - тестбенч, проверяющий модули, указанные выше
+ 
