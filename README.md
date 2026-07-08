@@ -80,3 +80,56 @@ nextstate logic synthesizes into combinational transition logic.
 detected synthesizes into a flip-flop.
 next_detected synthesizes into combinational output logic.
 
+## Day 7 — Synchronous FIFO
+
+В этот день был реализован модуль `sync_fifo` — простой синхронный FIFO на одном тактовом сигнале.
+
+FIFO работает как очередь: данные читаются в том же порядке, в котором были записаны.
+
+### Implemented files
+
+- `rtl/sync_fifo.sv`
+- `tb/sync_fifo_tb.sv`
+
+### Interface
+
+module sync_fifo #(
+    parameter int WIDTH = 8,
+    parameter int DEPTH = 8
+) (
+    input  logic             clk,
+    input  logic             rst_n,
+    input  logic             wr_en,
+    input  logic             rd_en,
+    input  logic [WIDTH-1:0] wdata,
+    output logic [WIDTH-1:0] rdata,
+    output logic             full,
+    output logic             empty
+);
+Internal structure
+mem — memory array for stored data;
+wr_ptr — write pointer;
+rd_ptr — read pointer;
+count — number of stored elements.
+Flags
+Flag	Meaning
+empty	FIFO contains no data
+full	FIFO contains DEPTH elements
+Behavior
+Write is performed when wr_en = 1 and full = 0.
+Read is performed when rd_en = 1 and empty = 0.
+When write and read happen at the same time, count does not change.
+rdata is registered and updates on read.
+Simulation
+iverilog -g2012 -o sim/sync_fifo_tb.out \
+    tb/sync_fifo_tb.sv \
+    rtl/sync_fifo.sv
+
+vvp sim/sync_fifo_tb.out
+gtkwave sync_fifo_tb.vcd
+What this module synthesizes into
+mem synthesizes into a small memory/register array;
+wr_ptr and rd_ptr synthesize into pointer registers;
+count synthesizes into a counter register;
+full and empty synthesize into comparator logic;
+control logic prevents read from empty FIFO and write to full FIFO.
