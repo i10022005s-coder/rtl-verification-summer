@@ -3,12 +3,12 @@
 *.vcd
 *.vvp
 *.fst
+*.log
 
 # Build/simulation directories
-sim/*.out
-sim/*.vcd
-sim/*.vvp
-sim/*.fst
+sim/
 
-# VS Code local settings, optional
+# Editor files
 .vscode/
+*.swp
+*~

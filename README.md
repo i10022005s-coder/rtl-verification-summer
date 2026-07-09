@@ -133,3 +133,34 @@ wr_ptr and rd_ptr synthesize into pointer registers;
 count synthesizes into a counter register;
 full and empty synthesize into comparator logic;
 control logic prevents read from empty FIFO and write to full FIFO.
+
+
+## Week 01 — SystemVerilog RTL Basics
+
+| Day | Topic | Main files |
+|---|---|---|
+| Day 1 | Basic combinational logic | mux4, decoder2to4, priority_encoder4, parity4 |
+| Day 2 | Combinational coding styles | mux4_assign, mux4_if, mux4_case, comparator4 |
+| Day 3 | Arithmetic blocks | half_adder, full_adder, adder4, subtractor4 |
+| Day 4 | ALU | alu4 |
+| Day 5 | Sequential logic | dff, register_en, shift_register, counter_modN |
+| Day 6 | FSM | sequence_detector_1011 |
+| Day 7 | Synchronous FIFO | sync_fifo |
+
+## How to run simulations
+
+Run all tests:
+
+bash
+make all
+
+Run a specific test:
+
+make alu
+make seq
+make fsm
+make fifo
+
+Clean simulation files:
+
+make clean
