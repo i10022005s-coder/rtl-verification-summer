@@ -22,8 +22,8 @@ module sync_fifo #(
     logic [$clog2(DEPTH)-1:0] read_ptr;
     logic [$clog2(DEPTH+1)-1:0] count;
 
-    assign empty = (count === 0);
-    assign full = (count === DEPTH);
+    assign empty = (count == 0);
+    assign full = (count == DEPTH);
     
     always_ff @(posedge clock,  posedge reset) begin 
         if (reset) begin
@@ -31,29 +31,56 @@ module sync_fifo #(
             write_ptr <= '0;
             read_ptr <= '0;
             valid <= '0;
+            rdata <= '0;
         end
         else begin
             valid <= '0;
-            if (empty & write_en & read_en) begin
+            if (empty && write_en && read_en) begin
                 rdata <= wdata;
                 valid <= 1'b1;
             end
-            if (read_en & write_en & ~empty & ~full) begin
+            else if (read_en && write_en && !empty) begin
                 rdata <= mem[read_ptr];
                 mem[write_ptr] <= wdata;
-                read_ptr <= read_ptr + 'b1;
-                write_ptr <= write_ptr + 'b1;
+
+                if (read_ptr == DEPTH-1) begin
+                    read_ptr <= '0;
+                end
+                else begin
+                    read_ptr <= read_ptr + 'b1;
+                end
+                if (write_ptr == DEPTH-1) begin
+                    write_ptr <= '0;
+                end
+                else begin
+                    write_ptr <= write_ptr + 'b1;
+                end
+
                 valid <= 1'b1;
             end
-            if (read_en & ~write_en & ~empty) begin
+            else if (read_en && !write_en && !empty) begin
                 rdata <= mem[read_ptr];
-                read_ptr <= read_ptr + 'b1;
+
+                if (read_ptr == DEPTH-1) begin
+                    read_ptr <= '0;
+                end
+                else begin
+                    read_ptr <= read_ptr + 'b1;
+                end
                 count <= count - 'b1;
+
                 valid <= 1'b1;
             end    
-            if (~read_en & write_en & ~full) begin
+            else if (~read_en && write_en && !full) begin
                 mem[write_ptr] <= wdata;
-                write_ptr <= write_ptr + 'b1;
+
+                if (write_ptr == DEPTH-1) begin
+                    write_ptr <= '0;
+                end
+                else begin
+                    write_ptr <= write_ptr + 'b1;
+                end
+
                 count <= count + 'b1;
             end         
         end 
