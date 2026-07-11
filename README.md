@@ -164,3 +164,45 @@ make fifo
 Clean simulation files:
 
 make clean
+
+## Week 02 — CPU Datapath Basics
+
+### Day 2 — Register File
+
+В этот день был реализован модуль `reg_file` — регистровый файл с двумя портами чтения и одним портом записи.
+
+### Implemented files
+
+- `week02_cpu_datapath/rtl/reg_file.sv`
+- `week02_cpu_datapath/tb/reg_file_tb.sv`
+
+### Interface
+
+systemverilog
+module reg_file #(
+    parameter int DATA_WIDTH = 32,
+    parameter int ADDR_WIDTH = 5
+) (
+    input  logic                  clk,
+    input  logic                  rst_n,
+    input  logic                  we,
+    input  logic [ADDR_WIDTH-1:0] ra1,
+    input  logic [ADDR_WIDTH-1:0] ra2,
+    input  logic [ADDR_WIDTH-1:0] wa,
+    input  logic [DATA_WIDTH-1:0] wd,
+    output logic [DATA_WIDTH-1:0] rd1,
+    output logic [DATA_WIDTH-1:0] rd2
+);
+Behavior
+Read ports are combinational.
+Write port is synchronous.
+Register r0 is hardwired to zero.
+Write to r0 is ignored.
+Two registers can be read at the same time.
+Simulation
+make regfile
+What this module synthesizes into
+regs synthesizes into a register array.
+Write logic synthesizes into synchronous write enable logic.
+Read ports synthesize into multiplexers.
+Zero register logic forces register 0 to always read as zero.

@@ -1,10 +1,12 @@
 WEEK1 = week01_sv_basics
+WEEK2 = week02_cpu_datapath
 
 IVERILOG = iverilog
 VVP = vvp
 FLAGS = -g2012
 
 SIM_DIR = $(WEEK1)/sim
+SIM2_DIR = $(WEEK2)/sim
 
 .PHONY: all clean comb day2 arith alu seq fsm fifo
 
@@ -71,3 +73,10 @@ fifo: $(SIM_DIR)
 clean:
 	rm -rf $(SIM_DIR)
 	rm -f $(WEEK1)/*.vcd
+
+regfile:
+	mkdir -p $(SIM2_DIR)
+	$(IVERILOG) $(FLAGS) -o $(SIM2_DIR)/reg_file_tb.out \
+		$(WEEK2)/tb/reg_file_tb.sv \
+		$(WEEK2)/rtl/reg_file.sv
+	cd $(WEEK2) && vvp sim/reg_file_tb.out
