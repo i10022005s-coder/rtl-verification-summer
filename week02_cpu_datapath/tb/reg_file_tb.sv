@@ -65,9 +65,14 @@ module test;
         $dumpfile("reg_file_tb.vcd");
         $dumpvars(0, test);
         errors = 0;
+        we  = 1'b0;
+        ra1 = '0;
+        ra2 = '0;
+        wa  = '0;
+        wd  = '0;
 
         reset = 1'b1;
-        repeat (2) @(posedge clock);
+        repeat (2) @(posedge clock); #1;
         reset = 1'b0;
         @(posedge clock);
 
@@ -85,10 +90,7 @@ module test;
 
         $display("Test 2. Check write we = 1.");
         errors = 0;
-        @(negedge clock);
-        we = 1'b1;
-        wa = 'b101;
-        wd = 'b1011;
+        write_reg('b101, 'b1011);
         @(posedge clock);
         check_read('b101, 'b1011, 'b101, 'b1011);
         if (errors == 0) begin
@@ -98,10 +100,10 @@ module test;
             $display("Test 2 FAIL.");
         end 
 
-        $display("Test 3. Check write we = 0d.");
+        $display("Test 3. Check write we = 0.");
         errors = 0;
         @(negedge clock);
-        we = 1'b0;
+        we = '0;
         wa = 'b100;
         wd = 'b1011;
         @(posedge clock);
@@ -113,16 +115,10 @@ module test;
             $display("Test 3 FAIL.");
         end
 
-        $display("Test 3. Check from two different register.");
+        $display("Test 4. Check from two different register.");
         errors = 0;
-        @(negedge clock);
-        we = 1'b1;
-        wa = 'b10;
-        wd = 'b101;
-        @(negedge clock);
-        we = 1'b1;
-        wa = 'b11;
-        wd = 'b100;
+        write_reg('b10, 'b101);
+        write_reg('b11, 'b100);
         @(posedge clock);
         check_read('b10, 'b101, 'b11, 'b100);
         if (errors == 0) begin
@@ -134,10 +130,7 @@ module test;
 
         $display("Test 5. Check r0.");
         errors = 0;
-        @(negedge clock);
-        we = 1'b1;
-        wa = '0;
-        wd = 'b1011;
+        write_reg('0, 'b101);
         @(posedge clock);
         check_read('0, '0, '0, '0);
         if (errors == 0) begin

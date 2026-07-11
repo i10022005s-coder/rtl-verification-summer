@@ -19,7 +19,7 @@ module reg_file #(
 
     localparam int NUM_REGS = 1 << ADDR_WIDTH;
 
-    logic [DATA_WIDTH-1:0] regs [NUM_REGS-1:0];
+    logic [DATA_WIDTH-1:0] regs [0:NUM_REGS-1];
 
     assign rd1 = (ra1 == '0) ? '0 : regs[ra1];
     assign rd2 = (ra2 == '0) ? '0 : regs[ra2];
@@ -27,11 +27,11 @@ module reg_file #(
     always_ff @(posedge clock or posedge reset) begin
         if (reset) begin
             for (int i = 0; i < NUM_REGS; i++) begin
-                regs[i] = '0;
+                regs[i] <= '0;
             end
         end
         else begin
-            if (we) begin
+            if (we && (wa != '0)) begin
                 regs[wa] <= wd;
             end
         end
