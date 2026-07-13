@@ -206,3 +206,24 @@ regs synthesizes into a register array.
 Write logic synthesizes into synchronous write enable logic.
 Read ports synthesize into multiplexers.
 Zero register logic forces register 0 to always read as zero.
+### Day 3 — Instruction and Data Memory
+
+Implemented:
+
+- combinational instruction ROM;
+- loading memory contents with `$readmemh`;
+- data RAM with combinational read;
+- synchronous write with write enable;
+- conversion of a byte address into a word index.
+
+Files:
+
+- `rtl/instr_mem.sv`
+- `rtl/data_mem.sv`
+- `tb/memory_tb.sv`
+- `tb/data/program.hex`
+
+Run:
+
+```bash
+make memory
