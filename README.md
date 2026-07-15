@@ -227,3 +227,23 @@ Run:
 
 ```bash
 make memory
+### Day 4 — MIPS Instruction Decoder
+
+Implemented a combinational decoder that extracts:
+
+- opcode;
+- rs, rt and rd register addresses;
+- shamt;
+- funct;
+- 16-bit immediate;
+- sign-extended 32-bit immediate.
+
+Supported instruction formats:
+
+- R-type;
+- I-type.
+
+Run:
+
+```bash
+make decoder
