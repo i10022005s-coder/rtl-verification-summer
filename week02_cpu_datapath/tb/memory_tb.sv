@@ -10,7 +10,7 @@ module test;
     logic [31:0] rd;
 
     int errors = 0;
-    logic old_data;
+    logic [31:0] old_data;
 
     instr_mem dut_instr_mem(
         .addr (instr_addr),
@@ -49,7 +49,6 @@ module test;
         wd = data_value;
         @(negedge clock);
         we = 1'b0;
-        data_addr = '0;
         wd = '0;
     end
     endtask 

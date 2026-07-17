@@ -8,9 +8,9 @@ FLAGS = -g2012
 SIM_DIR = $(WEEK1)/sim
 SIM2_DIR = $(WEEK2)/sim
 
-.PHONY: all clean comb day2 arith alu seq fsm fifo regfile memory decoder
+.PHONY: all control comb day2 arith alu seq fsm fifo regfile memory decoder clean
 
-all: comb day2 arith alu seq fsm fifo regfile memory decoder
+all: control comb day2 arith alu seq fsm fifo regfile memory decoder
 
 $(SIM_DIR):
 	mkdir -p $(SIM_DIR)
@@ -93,3 +93,11 @@ decoder:
 		$(WEEK2)/tb/instruction_decoder_tb.sv \
 		$(WEEK2)/rtl/instruction_decoder.sv
 	cd $(WEEK2) && vvp sim/instruction_decoder_tb.out
+control:
+	mkdir -p $(SIM2_DIR)
+	$(IVERILOG) $(FLAGS) -s test \
+		-o $(SIM2_DIR)/control_unit_tb.out \
+		$(WEEK2)/rtl/main_decoder.sv \
+		$(WEEK2)/rtl/alu_decoder.sv \
+		$(WEEK2)/tb/control_unit_tb.sv
+	cd $(WEEK2) && $(VVP) sim/control_unit_tb.out

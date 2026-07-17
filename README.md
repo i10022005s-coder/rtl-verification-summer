@@ -225,7 +225,7 @@ Files:
 
 Run:
 
-```bash
+bash
 make memory
 ### Day 4 — MIPS Instruction Decoder
 
@@ -245,5 +245,42 @@ Supported instruction formats:
 
 Run:
 
-```bash
+bash
 make decoder
+### Day 5 — MIPS Control Unit
+
+Implemented the control unit for a single-cycle MIPS processor.
+
+The control unit consists of two combinational modules:
+
+- `main_decoder.sv` — decodes the instruction opcode and generates
+  datapath control signals;
+- `alu_decoder.sv` — selects the required ALU operation using
+  `alu_op` and the R-type `funct` field.
+
+Supported instructions:
+
+- R-type: `add`, `sub`, `and`, `or`, `slt`;
+- `lw`;
+- `sw`;
+- `beq`;
+- `addi`.
+
+Generated control signals:
+
+- `reg_write`;
+- `reg_dst`;
+- `alu_src`;
+- `mem_write`;
+- `mem_to_reg`;
+- `branch`;
+- `alu_op`;
+- `alu_control`.
+
+The self-checking testbench verifies all supported instructions,
+an unknown opcode, and an unknown R-type function code.
+
+Run the test:
+
+bash
+make control
