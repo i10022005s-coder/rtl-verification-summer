@@ -8,10 +8,11 @@ module instruction_decoder (
     output logic [4:0] shamt,
     output logic [5:0] funct,
 
-    output logic [15:0] imm,
-    output logic [31:0] sign_imm
+    output logic [31:0] extended_imm
 );
     
+    logic [15:0] imm;
+
     assign opcode = instr [31:26];
     assign rs = instr [25:21];
     assign rt = instr [20:16];
@@ -20,7 +21,7 @@ module instruction_decoder (
     assign funct = instr [5:0];
     assign imm = instr [15:0];
 
-    assign sign_imm =
+    assign extended_imm =
     ((opcode == 6'h0C) ||
      (opcode == 6'h0D) ||
      (opcode == 6'h0E))

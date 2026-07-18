@@ -284,3 +284,46 @@ Run the test:
 
 bash
 make control
+### Day 6 — MIPS Single-Cycle Datapath
+
+Implemented the datapath of a single-cycle MIPS processor.
+
+New RTL modules:
+
+- `pc_reg.sv` — 32-bit program counter register with asynchronous reset;
+- `mux2.sv` — parameterized two-input multiplexer;
+- `mips_alu.sv` — processor ALU supporting AND, OR, ADD, SUB and signed SLT;
+- `datapath.sv` — integrates the program counter, instruction decoder,
+  register file, ALU and datapath multiplexers.
+
+The datapath supports:
+
+- sequential PC update using `PC + 4`;
+- forward and backward branch address calculation;
+- selection of `rt` or `rd` as the destination register;
+- selection of a register value or extended immediate as the second ALU operand;
+- selection of the ALU result or memory data for register write-back;
+- generation of memory address and write data;
+- generation of the ALU `zero` flag.
+
+The self-checking testbench verifies:
+
+- asynchronous PC reset;
+- PC register updates and value retention;
+- both multiplexer inputs;
+- all supported ALU operations;
+- signed SLT;
+- sequential PC execution;
+- forward and backward branches;
+- `addi`;
+- `lw`;
+- `sw`;
+- R-type register destination selection;
+- disabled register writes;
+- protection of register `$0`;
+- asserted and deasserted `zero` flag.
+
+Run:
+
+bash
+make datapath

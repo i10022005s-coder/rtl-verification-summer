@@ -8,9 +8,9 @@ FLAGS = -g2012
 SIM_DIR = $(WEEK1)/sim
 SIM2_DIR = $(WEEK2)/sim
 
-.PHONY: all control comb day2 arith alu seq fsm fifo regfile memory decoder clean
+.PHONY: all datapath control comb day2 arith alu seq fsm fifo regfile memory decoder clean
 
-all: control comb day2 arith alu seq fsm fifo regfile memory decoder
+all: datapath control comb day2 arith alu seq fsm fifo regfile memory decoder
 
 $(SIM_DIR):
 	mkdir -p $(SIM_DIR)
@@ -73,6 +73,8 @@ fifo: $(SIM_DIR)
 clean:
 	rm -rf $(SIM_DIR)
 	rm -f $(WEEK1)/*.vcd
+	rm -f $(WEEK2)/sim/*.out
+	rm -f $(WEEK2)/sim/*.vcd
 
 regfile:
 	mkdir -p $(SIM2_DIR)
@@ -101,3 +103,15 @@ control:
 		$(WEEK2)/rtl/alu_decoder.sv \
 		$(WEEK2)/tb/control_unit_tb.sv
 	cd $(WEEK2) && $(VVP) sim/control_unit_tb.out
+datapath:
+	mkdir -p $(SIM2_DIR)
+	$(IVERILOG) $(FLAGS) -Wall -s test \
+		-o $(SIM2_DIR)/datapath_tb.out \
+		$(WEEK2)/rtl/pc_reg.sv \
+		$(WEEK2)/rtl/mux2.sv \
+		$(WEEK2)/rtl/mips_alu.sv \
+		$(WEEK2)/rtl/instruction_decoder.sv \
+		$(WEEK2)/rtl/reg_file.sv \
+		$(WEEK2)/rtl/datapath.sv \
+		$(WEEK2)/tb/datapath_tb.sv
+	cd $(WEEK2) && $(VVP) sim/datapath_tb.out
