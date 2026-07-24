@@ -327,3 +327,78 @@ Run:
 
 bash
 make datapath
+### Day 7 — Complete Single-Cycle MIPS System
+
+Completed the integration of a single-cycle MIPS processor.
+
+The top-level system contains:
+
+- `instr_mem.sv` — instruction memory initialized from a hexadecimal file;
+- `data_mem.sv` — data memory with asynchronous read and synchronous write;
+- `controller.sv` — combines the main decoder and ALU decoder;
+- `mips_core.sv` — combines the controller and datapath;
+- `mips_system.sv` — connects the processor core to instruction and data memories.
+
+System hierarchy:
+
+mips_system
+├── instr_mem
+├── data_mem
+└── mips_core
+    ├── controller
+    │   ├── main_decoder
+    │   └── alu_decoder
+    └── datapath
+The processor currently supports:
+
+R-type add, sub, and, or, and slt;
+addi;
+lw;
+sw;
+beq.
+
+The integration test loads the following program from
+tb/data/program.hex:
+
+addi $1, $0, 5
+addi $2, $0, 7
+add  $3, $1, $2
+sw   $3, 0($0)
+lw   $4, 0($0)
+beq  $4, $3, label
+addi $5, $0, 99
+label:
+addi $5, $0, 42
+sw   $5, 4($0)
+
+The expected program flow is:
+
+PC: 0 → 4 → 8 → 12 → 16 → 20 → 28 → 32
+
+The instruction at address 24 must be skipped by beq.
+
+Expected final data memory contents:
+
+memory[0] = 12
+memory[1] = 42
+
+The self-checking testbench verifies:
+
+program loading from a hexadecimal file;
+instruction execution without manually supplied control signals;
+arithmetic and register write-back;
+data memory writes and reads;
+the taken beq branch;
+the final contents of data memory.
+
+Run the integration test:
+
+make mips
+
+Run the complete regression:
+
+make all
+
+Expected result:
+
+ALL MIPS SYSTEM TESTS PASSED
