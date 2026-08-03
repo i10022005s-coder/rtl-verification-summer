@@ -12,3 +12,12 @@ sim/
 .vscode/
 *.swp
 *~
+# Questa/ModelSim simulation files
+**/work/
+**/sim/*.vcd
+**/transcript
+**/vsim.wlf
+**/wlft*
+**/vsim_stacktrace.vstf
+**/qwave.db
+**/modelsim.ini

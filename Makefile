@@ -134,3 +134,24 @@ mips:
 		rtl/mips_system.sv \
 		tb/mips_system_tb.sv
 	cd $(WEEK2) && $(VVP) sim/mips_system.out
+WEEK3 = week03_sv_verification
+
+.PHONY: fifo_week3 clean_week3
+
+fifo_week3:
+	rm -rf $(WEEK3)/work
+	mkdir -p $(WEEK3)/sim
+	cd $(WEEK3) && vlibw work
+	cd $(WEEK3) && vlogw -sv \
+		tb/transactions/fifo_transaction.sv \
+		tb/interfaces/fifo_if.sv \
+		rtl/sync_fifo.sv \
+		tb/top/fifo_tb.sv
+	cd $(WEEK3) && vsimw -c work.fifo_tb \
+		-do "run -all; quit -f"
+
+clean_week3:
+	rm -rf $(WEEK3)/work
+	rm -f $(WEEK3)/sim/*.vcd
+	rm -f $(WEEK3)/transcript
+	rm -f $(WEEK3)/vsim.wlf

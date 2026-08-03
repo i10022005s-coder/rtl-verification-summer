@@ -402,3 +402,47 @@ make all
 Expected result:
 
 ALL MIPS SYSTEM TESTS PASSED
+
+## Week 3 — SystemVerilog Verification
+
+### Day 1 — Interface and Transaction
+
+Started building a class-based verification environment for a
+synchronous FIFO.
+
+Implemented:
+
+- `fifo_if.sv` — groups FIFO signals into a SystemVerilog interface;
+- `fifo_transaction.sv` — represents a FIFO operation as a class object;
+- `fifo_tb.sv` — creates and randomizes transaction objects and manually
+  transfers their fields to the interface;
+- a self-checking write/read test for the FIFO.
+
+Current verification flow:
+
+fifo_transaction
+        ↓
+manual transaction-to-signal conversion
+        ↓
+fifo_if
+        ↓
+sync_fifo
+
+The testbench verifies:
+
+reset state;
+object creation using new();
+randomization using randomize();
+writing 8'hA5;
+reading 8'hA5;
+empty, full, and valid behavior;
+simulation timeout and automatic PASS/FAIL reporting.
+
+Run:
+
+make fifo_week3
+
+Expected result:
+
+ALL FIFO TESTS Passed
+Errors: 0, Warnings: 0
