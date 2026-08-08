@@ -136,7 +136,7 @@ mips:
 	cd $(WEEK2) && $(VVP) sim/mips_system.out
 WEEK3 = week03_sv_verification
 
-.PHONY: fifo_week3 clean_week3
+.PHONY: fifo_day2 fifo_week3 clean_week3
 
 fifo_week3:
 	rm -rf $(WEEK3)/work
@@ -148,6 +148,19 @@ fifo_week3:
 		rtl/sync_fifo.sv \
 		tb/top/fifo_tb.sv
 	cd $(WEEK3) && vsimw -c work.fifo_tb \
+		-do "run -all; quit -f"
+
+fifo_day2:
+	rm -rf $(WEEK3)/work
+	cd $(WEEK3) && vlibw work
+	cd $(WEEK3) && vlogw -sv \
+		tb/transactions/fifo_transaction.sv \
+		tb/interfaces/fifo_if.sv \
+		tb/components/fifo_generator.sv \
+		tb/components/fifo_driver.sv \
+		rtl/sync_fifo.sv \
+		tb/top/fifo_tb2.sv
+	cd $(WEEK3) && vsimw -c work.fifo_tb2 \
 		-do "run -all; quit -f"
 
 clean_week3:

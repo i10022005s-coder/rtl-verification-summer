@@ -446,3 +446,54 @@ Expected result:
 
 ALL FIFO TESTS Passed
 Errors: 0, Warnings: 0
+### Week 3 — Day 2: Generator, Mailbox and Driver
+
+Implemented the next stage of the class-based FIFO verification environment.
+
+Added:
+
+- `fifo_generator.sv` — creates randomized FIFO transactions;
+- `fifo_driver.sv` — receives transactions and drives the FIFO interface;
+- typed `mailbox #(fifo_transaction)` for communication between generator and driver;
+- `virtual fifo_if` for access to DUT signals from the driver;
+- parallel execution of generator and driver using `fork...join`;
+- automatic checks of generated and driven transaction counts.
+
+Current verification flow:
+
+text
+fifo_generator
+      ↓
+fifo_transaction
+      ↓
+mailbox
+      ↓
+fifo_driver
+      ↓
+virtual fifo_if
+      ↓
+sync_fifo
+
+The generator creates 16 transactions using $urandom_range.
+The mailbox is bounded to 8 entries, so the generator blocks when the mailbox
+is full until the driver consumes transactions.
+
+The driver applies transaction fields to the FIFO interface on the falling
+edge of the clock and the FIFO processes them on the following rising edge.
+
+The testbench checks:
+
+correct FIFO reset state;
+generator-to-driver transaction transfer;
+number of generated transactions;
+number of driven transactions;
+simulation timeout.
+
+Run:
+
+make fifo_day2
+
+Expected result:
+
+ALL FIFO TESTS Passed
+Errors: 0, Warnings: 0

@@ -5,11 +5,13 @@ package fifo_transaction_pkg;
         bit write_en;
         bit read_en;
         bit [7:0] write_data;
+        int unsigned id;
 
         function new();
             write_en = 1'b0;
             read_en = 1'b0;
             write_data = '0;
+            id = 0;
         endfunction
 
         function void generate_random();
@@ -19,7 +21,7 @@ package fifo_transaction_pkg;
         endfunction
 
         function void print(string prefix = "TRANSACTION");
-            $display("%s:  write_en = %0b, read_en = %0b write_data = 0x%02h", prefix, write_en, read_en, write_data); 
+            $display("%s:  id = %0d, write_en = %0b, read_en = %0b write_data = 0x%02h", prefix, id, write_en, read_en, write_data); 
         endfunction
     endclass 
 endpackage
