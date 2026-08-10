@@ -497,3 +497,74 @@ Expected result:
 
 ALL FIFO TESTS Passed
 Errors: 0, Warnings: 0
+
+### Week 3 — Day 3: Monitor, Scoreboard and Environment
+
+Extended the class-based FIFO verification environment.
+
+Implemented:
+
+- `fifo_monitor.sv` — passively observes FIFO interface activity;
+- monitor-to-scoreboard mailbox;
+- `fifo_scoreboard.sv` — maintains a reference FIFO model using a
+  SystemVerilog queue and automatically compares DUT behavior;
+- `fifo_environment.sv` — creates, connects and runs verification
+  components;
+- `fifo_tb3.sv` — top-level testbench using the environment.
+
+Current verification architecture:
+
+Generator
+    |
+    v
+ gen2drv
+    |
+    v
+ Driver -----> fifo_if -----> FIFO
+                  |
+                  v
+               Monitor
+                  |
+                  v
+               mon2scb
+                  |
+                  v
+              Scoreboard
+
+The monitor observes:
+
+write/read requests;
+write data;
+read data;
+empty;
+full;
+valid.
+
+The scoreboard maintains an independent reference queue and checks:
+
+FIFO write behavior;
+FIFO read ordering;
+simultaneous read/write;
+empty FIFO bypass behavior;
+read data;
+valid;
+empty;
+full.
+
+The scoreboard does not inspect the internal FIFO memory, pointers or count.
+It predicts expected behavior independently from the DUT.
+
+The environment checks that all requested transactions were:
+
+generated;
+driven;
+observed;
+checked by the scoreboard.
+
+Run:
+
+make fifo_day3
+
+Expected result:
+
+ALL FIFO TESTS Passed

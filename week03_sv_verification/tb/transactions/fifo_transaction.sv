@@ -1,16 +1,28 @@
 package fifo_transaction_pkg;
 
-    class fifo_transaction;
+    class fifo_transaction #(
+        parameter  int DATA_WIDTH = 8
+    );;
 
         bit write_en;
         bit read_en;
-        bit [7:0] write_data;
+        bit [DATA_WIDTH-1:0] write_data;
+
+        logic [DATA_WIDTH-1:0] read_data;
+        logic empty;
+        logic full;
+        logic valid;
+
         int unsigned id;
 
         function new();
             write_en = 1'b0;
             read_en = 1'b0;
             write_data = '0;
+            empty = 1'b0;
+            full = 1'b0;
+            valid = 1'b0;
+            read_data = '0;
             id = 0;
         endfunction
 

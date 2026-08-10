@@ -4,7 +4,7 @@ package fifo_generator_pkg;
     class fifo_generator;
         mailbox #(fifo_transaction) outbox;
         int unsigned transaction_count;
-        int unsigned id;
+        int unsigned generated_count;
 
         function new(
             mailbox #(fifo_transaction) outbox,
@@ -22,12 +22,12 @@ package fifo_generator_pkg;
                 tr = new();
                 tr.generate_random();
                 tr.id = i;
-
-                tr.print("Generator:");
+                //На данном этапе нет необходимости в том, чтобы печатать результат работы генератора, так как он уже проверен и меня интересует работа среды вцелом
+                //tr.print("Generator:");
                 outbox.put(tr);
                 i++;
             end
-            id = i;
+            generated_count = i;
         endtask 
 
     endclass 

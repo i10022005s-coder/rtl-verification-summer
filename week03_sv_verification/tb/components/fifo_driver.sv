@@ -5,7 +5,7 @@ package fifo_driver_pkg;
         virtual fifo_if vif;
         mailbox #(fifo_transaction) inbox;
         int unsigned transaction_count;
-        int unsigned id;
+        int unsigned driven_count;
 
         function new(
             virtual fifo_if vif,
@@ -25,7 +25,7 @@ package fifo_driver_pkg;
                 one_drive(tr);
                 i++;
             end
-            id = i;
+            driven_count = i;
         endtask 
 
         task one_drive(input fifo_transaction tr);
@@ -33,7 +33,8 @@ package fifo_driver_pkg;
             vif.write_en = tr.write_en;
             vif.read_en = tr.read_en;
             vif.write_data = tr.write_data;
-            tr.print("Driver:");
+            //На данном этапе нет необходимости в том, чтобы печатать результат работы драйвера, так как он уже проверен и меня интересует работа среды вцелом
+            //tr.print("Driver:");
 
             @(posedge vif.clock); #1;
             vif.write_en = 1'b0;
