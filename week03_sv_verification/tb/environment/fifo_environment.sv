@@ -34,8 +34,8 @@ package fifo_environment_pkg;
         endfunction
 
         function void build();
-            gen2drv = new(DEPTH);
-            mon2scb = new(DEPTH);
+            gen2drv = new();
+            mon2scb = new();
 
             generator = new(gen2drv, transaction_count);
             driver = new(vif, gen2drv, transaction_count);

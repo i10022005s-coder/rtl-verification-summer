@@ -568,3 +568,70 @@ make fifo_day3
 Expected result:
 
 ALL FIFO TESTS Passed
+
+### Week 3 — Day 4: Directed Corner-Case Verification
+Extended the FIFO verification environment with directed corner-case
+stimulus while keeping the existing driver, monitor, scoreboard and
+environment architecture.
+
+The generator now executes deterministic scenarios before random stress
+testing.
+
+Directed scenarios:
+
+- FIFO ordering;
+- fill FIFO to `full`;
+- write while `full`;
+- simultaneous read/write while `full`;
+- drain FIFO to `empty`;
+- read while `empty`;
+- simultaneous read/write while `empty`;
+- simultaneous read/write in normal operation;
+- pointer wrap-around.
+
+After the directed phase, additional random transactions are generated
+using `$urandom_range`.
+
+Verification flow remains:
+
+Generator
+    |
+    v
+Driver
+    |
+    v
+FIFO
+    |
+    v
+Monitor
+    |
+    v
+Scoreboard / Reference Model
+
+The scoreboard uses an independent SystemVerilog queue and does not
+inspect internal DUT pointers, counters or memory.
+
+For every observed transaction it checks:
+
+- read data;
+- `valid`;
+- `empty`;
+- `full`.
+
+Current test configuration:
+
+- DATA_WIDTH = 8
+- DEPTH = 8
+- directed corner-case tests
+- random stress phase
+
+Run:
+
+bash
+make fifo_day4
+
+Expected result:
+
+Tests complete: checks = 98, errors = 0.
+ALL FIFO TESTS Passed
+Errors: 0, Warnings: 0
