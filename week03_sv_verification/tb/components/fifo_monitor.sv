@@ -6,15 +6,18 @@ package fifo_monitor_pkg;
         int unsigned transaction_count;
         int unsigned observed_count;
 
-        mailbox #(fifo_transaction) outbox;
+        mailbox #(fifo_transaction) outbox1;
+        mailbox #(fifo_transaction) outbox2;
         
         function new(
             virtual fifo_if vif,
-            mailbox #(fifo_transaction) outbox,
+            mailbox #(fifo_transaction) outbox1,
+            mailbox #(fifo_transaction) outbox2,
             int unsigned transaction_count
         );
             this.vif = vif;
-            this.outbox = outbox;
+            this.outbox1 = outbox1;
+            this.outbox2 = outbox2;
             this.transaction_count = transaction_count;
         endfunction
 
@@ -36,7 +39,8 @@ package fifo_monitor_pkg;
                 tr.full = vif.full;
                 tr.valid = vif.valid;
 
-                outbox.put(tr);
+                outbox1.put(tr);
+                outbox2.put(tr);
                 i++;
             end
             observed_count = i;

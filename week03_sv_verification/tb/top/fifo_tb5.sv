@@ -3,19 +3,27 @@
 import fifo_transaction_pkg::*;
 import fifo_environment_pkg::*;
 
-module fifo_tb4;
+module fifo_tb5;
 
     localparam int DATA_WIDTH = 8;
     localparam int DEPTH = 8;
 
+    localparam int DIRECTED_COUNT = 4 * DEPTH + 26;
+    localparam int RANDOM_COUNT   = DEPTH * 3;
+    localparam int STRESS_COUNT   = 10000;
+
+    localparam int TRANSACTION_COUNT = DIRECTED_COUNT + 3 * RANDOM_COUNT + STRESS_COUNT;
+
+    localparam time TIMEOUT = (TRANSACTION_COUNT + 100) * 20ns;
+
     logic clock;
 
     int errors;
-    int unsigned transaction_count = DEPTH * 9 + 26;
+    int unsigned transaction_count = TRANSACTION_COUNT;
 
     fifo_environment #(
-        .DATA_WIDTH(DATA_WIDTH),
-        .DEPTH(DEPTH)
+        DATA_WIDTH,
+        DEPTH
     ) env;
 
     fifo_if #(
@@ -48,8 +56,8 @@ module fifo_tb4;
     initial begin
         errors = 0;
 
-        $dumpfile("sim/fifo_tb4.vcd");
-        $dumpvars(0, fifo_tb4);
+        $dumpfile("sim/fifo_tb5.vcd");
+        $dumpvars(0, fifo_tb5);
 
         fifo_bus.reset = 1'b1;
         fifo_bus.write_en = 1'b0;
@@ -89,6 +97,12 @@ module fifo_tb4;
         end
 
         $display("Functional coverage: %0.2f%%", env.coverage.get_coverage());
+        $display("Write: %0d", env.generator.write_counter);
+        $display("Read: %0d", env.generator.read_counter);
+        $display("RW: %0d", env.generator.rw_counter);
+        $display("Idle: %0d", env.generator.idle_counter);
+        $display("Random transactions: %0d", env.generator.transaction_counter);
+        $display("Total transactions: %0d", env.generator.generated_count);
         if (errors == 0) begin
             $display("ALL FIFO TESTS Passed");
         end
@@ -99,7 +113,7 @@ module fifo_tb4;
         end
 
     initial begin
-        #2000;
+        #(TIMEOUT);
         $fatal(1, "Timeout");
     end
 

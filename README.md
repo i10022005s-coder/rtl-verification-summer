@@ -635,3 +635,93 @@ Expected result:
 Tests complete: checks = 98, errors = 0.
 ALL FIFO TESTS Passed
 Errors: 0, Warnings: 0
+
+### Week 3 — Day 5: Weighted Random and Stress Verification
+
+Extended the FIFO verification environment with controlled random stimulus and long stress testing.
+
+Implemented:
+
+- weighted random transaction generation using `$urandom_range`;
+- balanced traffic profile;
+- write-heavy traffic profile;
+- read-heavy traffic profile;
+- 10,000-transaction stress test;
+- operation statistics for WRITE, READ, READ+WRITE and IDLE;
+- reproducible random seed support;
+- reduced console output for long-running tests;
+- functional coverage of FIFO operations and states.
+
+Random traffic profiles:
+
+Balanced:
+WRITE       25%
+READ        25%
+READ+WRITE  25%
+IDLE        25%
+
+Write-heavy:
+WRITE       60%
+READ        15%
+READ+WRITE  20%
+IDLE         5%
+
+Read-heavy:
+WRITE       15%
+READ        60%
+READ+WRITE  20%
+IDLE         5%
+```
+
+Verification flow:
+
+Directed corner cases
+        |
+        v
+Weighted random profiles
+        |
+        v
+10,000 transaction stress test
+        |
+        v
+Driver -> FIFO -> Monitor -> Scoreboard
+                        |
+                        +-> Functional coverage
+```
+
+The scoreboard continues to use an independent reference queue and checks:
+
+- FIFO ordering;
+- read data;
+- `valid`;
+- `empty`;
+- `full`;
+- simultaneous read/write behavior.
+
+The coverage collector samples:
+
+- IDLE;
+- WRITE;
+- READ;
+- READ+WRITE;
+- NORMAL state;
+- EMPTY state;
+- FULL state;
+- `valid`;
+- operation/state combinations.
+
+Run:
+
+```bash
+make fifo_day5
+```
+
+The test prints:
+
+- selected random seed;
+- operation statistics;
+- total transaction count;
+- functional coverage;
+- scoreboard result.
+
+A failing random test can be reproduced by running the same seed again.
