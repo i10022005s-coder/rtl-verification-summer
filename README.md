@@ -725,3 +725,58 @@ The test prints:
 - scoreboard result.
 
 A failing random test can be reproduced by running the same seed again.
+### Week 3 — Day 6: SystemVerilog Assertions
+
+Added a SystemVerilog Assertions layer to the existing self-checking FIFO verification environment.
+
+The assertion checker is implemented as a separate module and accesses the FIFO interface through a read-only `CHECK_MP` modport.
+
+Current verification architecture:
+
+Generator
+    |
+    v
+Driver ---> FIFO ---> Monitor ---> Scoreboard / Reference Model
+              |
+              +------> SVA Checker
+
+
+Implemented properties check:
+
+- reset state: `empty=1`, `full=0`, `valid=0`;
+- `full` and `empty` are never asserted simultaneously;
+- FIFO status signals do not contain `X/Z`;
+- reading an empty FIFO does not assert `valid`;
+- a successful read asserts `valid`;
+- writing to an empty FIFO makes it non-empty;
+- simultaneous read/write on an empty FIFO performs the expected bypass;
+- write-only operation while `full` does not change the full state;
+- simultaneous read/write while `full` preserves the full state and produces valid read data.
+
+The assertions use:
+
+- `property`;
+- `assert property`;
+- `@(posedge clock)`;
+- `disable iff`;
+- non-overlapped implication `|=>`;
+- `$past`;
+- `$isunknown`.
+
+Assertions complement the scoreboard rather than replace it:
+
+Scoreboard:
+checks data and behavior against an independent reference model.
+
+Assertions:
+check temporal rules and invariants of the FIFO interface.
+
+
+Run:
+
+make fifo_day6
+
+
+The test passes only if the environment, scoreboard and SVA checker report no errors.
+
+A mutation test was also used to confirm that intentionally incorrect DUT behavior is detected by the assertion checker.

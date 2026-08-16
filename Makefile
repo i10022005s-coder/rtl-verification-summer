@@ -208,6 +208,26 @@ fifo_day5:
 		tb/top/fifo_tb5.sv
 	cd $(WEEK3) && vsimw -c work.fifo_tb5 \
 		-do "run -all; quit -f"
+.PHONY: fifo_day6
+
+fifo_day6:
+	rm -rf $(WEEK3)/work
+	cd $(WEEK3) && vlibw work
+	cd $(WEEK3) && vlogw -sv \
+		tb/transactions/fifo_transaction.sv \
+		tb/interfaces/fifo_if.sv \
+		rtl/sync_fifo.sv \
+		tb/components/fifo_generator.sv \
+		tb/components/fifo_driver.sv \
+		tb/components/fifo_monitor.sv \
+		tb/components/fifo_scoreboard.sv \
+		tb/components/fifo_manual_coverage.sv \
+		tb/environment/fifo_environment.sv \
+		tb/assertion/fifo_assertion.sv \
+		tb/top/fifo_tb6.sv
+	cd $(WEEK3) && vsimw -c work.fifo_tb6 \
+		-do "run -all; quit -f"
+
 clean_week3:
 	rm -rf $(WEEK3)/work
 	rm -f $(WEEK3)/sim/*.vcd

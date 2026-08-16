@@ -14,4 +14,17 @@ interface fifo_if #(
     logic empty;
     logic valid;
 
+    modport CHECK_MP (
+    input clock,
+    input reset,
+
+    input write_en,
+    input read_en,
+    input write_data,
+
+    input read_data,
+    input full,
+    input empty,
+    input valid
+    );
 endinterface 
