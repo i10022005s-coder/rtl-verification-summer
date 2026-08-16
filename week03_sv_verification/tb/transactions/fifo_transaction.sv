@@ -2,7 +2,7 @@ package fifo_transaction_pkg;
 
     class fifo_transaction #(
         parameter  int DATA_WIDTH = 8
-    );;
+    );
 
         bit write_en;
         bit read_en;
@@ -12,6 +12,9 @@ package fifo_transaction_pkg;
         logic empty;
         logic full;
         logic valid;
+
+        logic pre_full;
+        logic pre_empty;
 
         int unsigned id;
 
@@ -23,6 +26,8 @@ package fifo_transaction_pkg;
             full = 1'b0;
             valid = 1'b0;
             read_data = '0;
+            pre_empty = 1'b0;
+            pre_full = 1'b0;
             id = 0;
         endfunction
 

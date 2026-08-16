@@ -28,10 +28,15 @@ package fifo_monitor_pkg;
                 tr = new();
                 tr.id = i;
 
-                @(negedge vif.clock); #1;
+                @(negedge vif.clock);
+                tr.pre_empty = vif.empty;
+                tr.pre_full = vif.full;
+                #1;
                 tr.write_en = vif.write_en;
                 tr.read_en = vif.read_en;
                 tr.write_data = vif.write_data;
+
+
 
                 @(posedge vif.clock); #1;
                 tr.read_data = vif.read_data;

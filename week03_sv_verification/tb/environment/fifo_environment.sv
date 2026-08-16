@@ -15,7 +15,10 @@ package fifo_environment_pkg;
         int unsigned transaction_count;
         int unsigned errors = 0;
 
-        fifo_generator generator;
+        fifo_generator #(
+            .DATA_WIDTH(DATA_WIDTH),
+            .DEPTH(DEPTH)
+        ) generator;
         fifo_driver driver;
         fifo_monitor monitor;
         fifo_scoreboard #(
@@ -23,6 +26,7 @@ package fifo_environment_pkg;
             .DEPTH(DEPTH)
         ) scoreboard;
         fifo_coverage coverage;
+        int unsigned seed = 12345;
 
         mailbox #(fifo_transaction) gen2drv;
         mailbox #(fifo_transaction) mon2scb;

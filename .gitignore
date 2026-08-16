@@ -21,3 +21,5 @@ sim/
 **/vsim_stacktrace.vstf
 **/qwave.db
 **/modelsim.ini
+#Regression log files
+week03_sv_verification/sim/logs/

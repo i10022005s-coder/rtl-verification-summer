@@ -780,3 +780,85 @@ make fifo_day6
 The test passes only if the environment, scoreboard and SVA checker report no errors.
 
 A mutation test was also used to confirm that intentionally incorrect DUT behavior is detected by the assertion checker.
+
+### Week 3 — Day 7: Coverage Closure and Regression
+
+Completed the FIFO verification environment by adding pre-state functional coverage and multi-seed regression testing.
+
+The monitor now records both the requested operation and the FIFO state before that operation:
+
+pre_empty
+pre_full
+write_en
+read_en
+
+This allows functional coverage to measure the meaningful cross:
+
+operation × pre-operation FIFO state
+
+The coverage model contains four operation classes:
+
+- IDLE
+- READ
+- WRITE
+- READ+WRITE
+
+and three FIFO states:
+
+- EMPTY
+- NORMAL
+- FULL
+
+This produces 12 reachable operation/state cross bins.
+
+Current verification architecture:
+
+                    Generator
+                        |
+                        v
+                     Driver
+                        |
+                        v
+                       FIFO
+                        |
+             +----------+----------+
+             |                     |
+          Monitor               Assertions
+             |
+        +----+----+
+        |         |
+        v         v
+   Scoreboard   Coverage
+        |
+  Reference model
+
+The complete environment now provides:
+
+- directed corner-case stimulus;
+- weighted random stimulus;
+- long stress tests;
+- reproducible random seeds;
+- transaction-level driver and monitor;
+- independent FIFO reference model;
+- automatic scoreboard checking;
+- SystemVerilog Assertions;
+- functional coverage;
+- operation/state cross coverage;
+- coverage closure;
+- multi-seed regression.
+
+A single test can be run with:
+
+A specific random sequence can be reproduced with:
+
+make fifo_day7 SEED=10002
+
+The complete regression can be started with:
+
+make fifo_regression
+
+Regression compiles the design once and then runs several independent simulation processes using different seeds. Each seed has a separate log file.
+
+A regression is considered successful only when all runs pass the scoreboard, assertion and environment checks.
+
+This completes Week 3: class-based SystemVerilog FIFO verification environment.

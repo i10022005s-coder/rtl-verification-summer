@@ -228,6 +228,51 @@ fifo_day6:
 	cd $(WEEK3) && vsimw -c work.fifo_tb6 \
 		-do "run -all; quit -f"
 
+REGRESSION_SEEDS := 10000 10001 10002 10003 10004
+SEED ?= 12345
+
+.PHONY: fifo_day7_compile fifo_day7 fifo_regression
+
+fifo_day7_compile:
+	rm -rf $(WEEK3)/work
+	cd $(WEEK3) && vlibw work
+	cd $(WEEK3) && vlogw -sv \
+		tb/transactions/fifo_transaction.sv \
+		tb/interfaces/fifo_if.sv \
+		rtl/sync_fifo.sv \
+		tb/components/fifo_generator.sv \
+		tb/components/fifo_driver.sv \
+		tb/components/fifo_monitor.sv \
+		tb/components/fifo_scoreboard.sv \
+		tb/components/fifo_manual_coverage.sv \
+		tb/environment/fifo_environment.sv \
+		tb/assertion/fifo_assertion.sv \
+		tb/top/fifo_tb7.sv
+
+fifo_day7: fifo_day7_compile
+	cd $(WEEK3) && vsimw -c work.fifo_tb7 +SEED=$(SEED) \
+		-do "run -all; quit -f"
+
+fifo_regression: fifo_day7_compile
+	@mkdir -p $(WEEK3)/sim/logs
+	@passed=0; failed=0; \
+	for seed in $(REGRESSION_SEEDS); do \
+		printf "Seed %s ... " $$seed; \
+		if (cd $(WEEK3) && vsimw -c work.fifo_tb7 +SEED=$$seed \
+			-do "run -all; quit -f" \
+			> sim/logs/seed_$$seed.log 2>&1); then \
+			echo "PASS"; \
+			passed=$$((passed + 1)); \
+		else \
+			echo "FAIL"; \
+			failed=$$((failed + 1)); \
+		fi; \
+	done; \
+	echo "----------------------------"; \
+	echo "Passed: $$passed"; \
+	echo "Failed: $$failed"; \
+	test $$failed -eq 0
+
 clean_week3:
 	rm -rf $(WEEK3)/work
 	rm -f $(WEEK3)/sim/*.vcd

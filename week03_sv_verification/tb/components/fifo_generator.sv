@@ -186,5 +186,10 @@ package fifo_generator_pkg;
             end
         endtask
 
+        task reseed(input int unsigned new_seed);
+            seed = new_seed;
+            void'($urandom(seed));
+        endtask
+
     endclass 
 endpackage
