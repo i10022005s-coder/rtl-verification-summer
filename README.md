@@ -862,3 +862,62 @@ Regression compiles the design once and then runs several independent simulation
 A regression is considered successful only when all runs pass the scoreboard, assertion and environment checks.
 
 This completes Week 3: class-based SystemVerilog FIFO verification environment.
+
+### Week 4 — Day 1: MIPS Verification Architecture
+
+Started development of a class-based verification environment for the single-cycle MIPS processor implemented in Week 2.
+
+The goal of Week 4 is to verify processor behavior at the architectural level rather than by inspecting internal RTL implementation details.
+
+Implemented initial verification components:
+
+- `mips_if.sv` — observation interface for processor architectural events;
+- `mips_transaction.sv` — transaction representing one executed MIPS instruction;
+- `mips_monitor.sv` — passive monitor skeleton for collecting instruction execution information.
+
+The MIPS transaction contains:
+
+- PC before instruction execution;
+- PC after instruction execution;
+- raw 32-bit instruction;
+- decoded instruction fields:
+  - opcode;
+  - rs;
+  - rt;
+  - rd;
+  - shamt;
+  - funct;
+  - immediate;
+- register-file write information:
+  - write enable;
+  - destination register address;
+  - write data;
+- memory access information:
+  - memory write enable;
+  - memory address;
+  - memory write data;
+  - memory read data.
+
+The monitor observes one architectural instruction event and converts signal-level processor activity into a `mips_transaction`.
+
+Planned verification architecture:
+
+Program
+   |
+   v
+MIPS Processor
+   |
+   v
+Monitor
+   |
+   v
+MIPS Transaction
+   |
+   +-----------> Scoreboard
+                     ^
+                     |
+              Reference Model
+
+The reference model and scoreboard will be implemented in the following stages.
+
+The reference model will describe MIPS ISA behavior independently from the RTL implementation so that common design/model bugs are not hidden by duplicating the DUT architecture.
