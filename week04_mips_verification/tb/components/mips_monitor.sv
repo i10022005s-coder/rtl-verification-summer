@@ -5,6 +5,7 @@ package mips_monitor_pkg;
         virtual mips_if vif;
         int unsigned transaction_count; 
         int unsigned observed_count;
+        logic reset;
 
         mailbox #(mips_transaction) outbox1;
         mailbox #(mips_transaction) outbox2;
@@ -27,6 +28,8 @@ package mips_monitor_pkg;
             repeat (transaction_count) begin
                 tr = new();
 
+                wait (!vif.reset);
+
                 @(negedge vif.clock);
                 #1;
                 tr.pc_before = vif.pc;
@@ -37,12 +40,16 @@ package mips_monitor_pkg;
                 tr.we_mem = vif.we_mem;
                 tr.wd_mem = vif.wd_mem;
                 tr.address_mem = vif.address_mem;
+                tr.rd_mem = vif.rd_mem;
+                tr.id = i;
                 tr.decode();
 
                 @(posedge vif.clock); #1;
                 tr.pc_after = vif.pc;
-                tr.rd_reg = vif.rd_reg;
-                tr.rd_mem = vif.rd_mem;
+                //tr.rd_reg = vif.rd_reg;
+                
+
+                tr.print();
 
                 outbox1.put(tr);
                 outbox2.put(tr);

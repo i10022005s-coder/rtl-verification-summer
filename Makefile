@@ -1,5 +1,6 @@
 WEEK1 = week01_sv_basics
 WEEK2 = week02_cpu_datapath
+WEEK4 = week04_mips_verification
 
 IVERILOG = iverilog
 VVP = vvp
@@ -278,3 +279,38 @@ clean_week3:
 	rm -f $(WEEK3)/sim/*.vcd
 	rm -f $(WEEK3)/transcript
 	rm -f $(WEEK3)/vsim.wlf
+
+
+.PHONY: mips_day2
+
+mips_day2:
+	rm -rf $(WEEK4)/work
+	cd $(WEEK4) && vlib work
+	cd $(WEEK4) && vlog -sv -work work \
+		tb/transactions/mips_transaction.sv \
+		tb/interfaces/mips_if.sv \
+		tb/components/mips_monitor.sv \
+		rtl/mux2.sv \
+		rtl/pc_reg.sv \
+		rtl/reg_file.sv \
+		rtl/instruction_decoder.sv \
+		rtl/mips_alu.sv \
+		rtl/main_decoder.sv \
+		rtl/alu_decoder.sv \
+		rtl/controller.sv \
+		rtl/datapath.sv \
+		rtl/mips_core.sv \
+		rtl/data_mem.sv \
+		rtl/instr_mem.sv \
+		rtl/mips_system.sv \
+		tb/top/mips_day2_tb.sv
+	cd $(WEEK4) && vsimw -c work.mips_tb \
+		-do "run -all; quit -f"
+
+.PHONY: clean_week4
+
+clean_week4:
+	rm -rf $(WEEK4)/work
+	rm -f $(WEEK4)/transcript
+	rm -f $(WEEK4)/vsim.wlf
+	rm -f $(WEEK4)/sim/*.vcd

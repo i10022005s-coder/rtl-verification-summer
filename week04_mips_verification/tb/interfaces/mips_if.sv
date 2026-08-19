@@ -10,7 +10,7 @@ interface mips_if (
     logic we_reg;
     logic [4:0] wa_reg;
     logic [31:0] wd_reg;
-    logic [31:0] rd_reg;
+    //logic [31:0] rd_reg;
 
     logic we_mem;
     logic [31:0] wd_mem;
@@ -27,7 +27,7 @@ interface mips_if (
         input we_reg,
         input wa_reg,
         input wd_reg,
-        input rd_reg,
+        //input rd_reg,
 
         input we_mem,
         input wd_mem,

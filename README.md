@@ -921,3 +921,72 @@ MIPS Transaction
 The reference model and scoreboard will be implemented in the following stages.
 
 The reference model will describe MIPS ISA behavior independently from the RTL implementation so that common design/model bugs are not hidden by duplicating the DUT architecture.
+
+### Week 4 — Day 2: MIPS Instruction Monitor
+
+Connected the initial verification environment to the single-cycle MIPS processor and implemented transaction-level observation of executed instructions.
+
+Implemented:
+
+- connected `mips_if` to observable processor signals;
+- completed `mips_monitor`;
+- added mailbox-based output of monitored transactions;
+- sampled instruction information and architectural effects;
+- recorded PC before and after instruction execution;
+- decoded monitored instructions into MIPS operations;
+- verified monitor output using the existing Week 2 test program.
+
+The monitor observes:
+
+- current PC;
+- 32-bit instruction;
+- register-file write enable;
+- destination register address;
+- register write data;
+- memory write enable;
+- memory address;
+- memory write data;
+- memory read data;
+- PC after instruction execution.
+
+Each executed instruction is converted into a `mips_transaction`.
+
+Example monitored execution:
+
+PC 0x00 -> 0x04 : ADDI  R1 <- 5
+PC 0x04 -> 0x08 : ADDI  R2 <- 7
+PC 0x08 -> 0x0C : ADD   R3 <- 12
+PC 0x0C -> 0x10 : SW    MEM[0] <- 12
+PC 0x10 -> 0x14 : LW    R4 <- 12
+PC 0x14 -> 0x1C : BEQ   taken
+PC 0x1C -> 0x20 : ADDI  R5 <- 42
+PC 0x20 -> 0x24 : SW    MEM[4] <- 42
+
+The taken `BEQ` was observed through the PC transition from `0x14` to `0x1C`, confirming that the monitor correctly associates the instruction with both its current and next PC.
+
+Current verification flow:
+
+program.hex
+    |
+    v
+MIPS Processor
+    |
+    v
+mips_if
+    |
+    v
+MIPS Monitor
+    |
+    v
+mips_transaction
+    |
+    v
+mailbox
+
+
+At this stage transactions are printed and manually inspected. An independent architectural reference model and automatic scoreboard will be added in the following stages.
+
+Run:
+
+make mips_day2
+
