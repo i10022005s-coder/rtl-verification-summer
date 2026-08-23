@@ -990,3 +990,74 @@ Run:
 
 make mips_day2
 
+### Week 4 — Day 3: MIPS Architectural Reference Model
+
+Implemented an independent architectural reference model for the supported subset of the MIPS ISA.
+
+The reference model maintains its own architectural state independently from the RTL processor:
+
+- program counter (`model_pc`);
+- 32 general-purpose registers (`model_regs`);
+- reference data memory (`model_mem`).
+
+Register `$0` is kept permanently equal to zero.
+
+The model supports the currently implemented processor instructions:
+
+- `ADD`;
+- `SUB`;
+- `AND`;
+- `OR`;
+- `SLT`;
+- `ADDI`;
+- `LW`;
+- `SW`;
+- `BEQ`.
+
+The reference model implements ISA-level behavior rather than duplicating the RTL datapath or controller.
+
+For each instruction it predicts:
+
+- current PC;
+- next PC;
+- register write enable;
+- destination register;
+- register write data;
+- memory write enable;
+- memory address;
+- memory write data.
+
+Immediate values are sign-extended where required.
+
+For `LW` and `SW`, architectural byte addresses are converted to word indices for the internal reference memory.
+
+For `BEQ`, the model independently calculates the next PC:
+
+not taken:
+next_pc = pc + 4
+
+taken:
+next_pc = pc + 4 + (sign_extended_immediate << 2)
+
+
+The model does not use the DUT's observed register write data, memory result or next PC to calculate the expected result.
+
+Current verification architecture:
+
+MIPS Processor
+      |
+      v
+   Monitor
+      |
+      v
+actual mips_transaction
+      |
+      +--------------------+
+                           |
+                           v
+                  Reference Model
+                           |
+                           v
+                   expected behavior
+
+The scoreboard that compares the observed DUT behavior with the reference-model prediction will be added in the next stage.
