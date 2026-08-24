@@ -1061,3 +1061,47 @@ actual mips_transaction
                    expected behavior
 
 The scoreboard that compares the observed DUT behavior with the reference-model prediction will be added in the next stage.
+## Week 4 Day 4 — MIPS Scoreboard
+
+Implemented self-checking verification environment.
+
+Added:
+
+- mips_environment
+- mips_scoreboard
+
+Verification flow:
+
+MIPS DUT
+    |
+    v
+Monitor
+    |
+    v
+Scoreboard
+    |
+    v
+Reference Model
+
+
+Scoreboard compares:
+
+- PC before/after
+- register write enable
+- register address/data
+- memory write enable
+- memory address/data
+
+Reference model independently predicts ISA behavior.
+
+Current supported instructions:
+
+- ADD
+- SUB
+- AND
+- OR
+- SLT
+- ADDI
+- LW
+- SW
+- BEQ
