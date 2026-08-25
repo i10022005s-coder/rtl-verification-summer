@@ -1105,3 +1105,102 @@ Current supported instructions:
 - LW
 - SW
 - BEQ
+# Week 4 Day 5 — Directed MIPS Regression Tests
+
+## Goal
+
+The goal of this day was to extend the MIPS verification environment with
+directed tests covering different instruction classes and corner cases.
+
+The same verification environment was reused:
+             MIPS DUT
+                |
+                v
+             Monitor
+                |
+                v
+          Transaction Stream
+                |
+                v
+            Scoreboard
+                |
+        +-------+-------+
+        |               |
+        v               v
+ Reference Model     Actual DUT
+
+Added:
+
+- tb/data/program_day5.hex
+- tb/top/mips_day5_tb.sv
+- tb/environment/mips_environment_day5.sv
+
+The regression program covers:
+
+### ALU TEST
+
+Checked:
+
+- ADDI
+- ADD
+- SUB
+- AND
+- OR
+- SLT
+
+
+### ZERO REGISTER TEST
+
+Checked:
+
+- register $0 cannot be modified
+
+
+### NEGATIVE NUMBERS TEST
+
+Checked:
+
+- signed immediate values
+- signed arithmetic
+- signed comparison
+
+
+### MEMORY TEST
+
+Checked:
+
+- SW instruction
+- LW instruction
+
+
+### BEQ TEST
+
+Checked:
+
+- branch taken
+- branch not taken
+- correct PC update
+
+## Simulation result
+
+Transactions observed: 19
+
+Transactions checked: 19
+
+Scoreboard errors: 0
+
+
+Result:
+
+ALL MIPS TESTS PASSED
+
+## Verification architecture
+
+The testbench uses:
+
+- transaction-based communication;
+- monitor for DUT observation;
+- reference model for expected behavior prediction;
+- scoreboard for automatic comparison.
+
+The same environment can be reused with different MIPS programs.
