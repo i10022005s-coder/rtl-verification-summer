@@ -966,7 +966,7 @@ The taken `BEQ` was observed through the PC transition from `0x14` to `0x1C`, co
 
 Current verification flow:
 
-program.hex
+vprogram.hex
     |
     v
 MIPS Processor
@@ -1204,3 +1204,120 @@ The testbench uses:
 - scoreboard for automatic comparison.
 
 The same environment can be reused with different MIPS programs.
+
+# Week 4 Day 6 — Functional Coverage
+
+## Goal
+
+The goal of this day was to add functional coverage analysis
+to the MIPS verification environment.
+
+Coverage was implemented as a separate verification component
+without dependency on scoreboard or reference model.
+
+##Verification architecture
+
+Monitor
+   |
+   +----------------+
+   |                |
+   v                v
+
+Scoreboard       Coverage
+
+   |
+Reference Model
+
+Added:
+
+tb/coverage/mips_manual_coverage.sv
+
+Updated:
+
+tb/environment/mips_environment.sv
+tb/top/mips_day6_tb.sv
+Makefile
+
+Implemented coverage points:
+
+1. Instruction coverage
+
+Covered instructions:
+
+- ADD
+- SUB
+- AND
+- OR
+- SLT
+- ADDI
+- LW
+- SW
+- BEQ
+
+
+2. Branch coverage
+
+Checked:
+
+- BEQ taken
+- BEQ not taken
+
+
+3. Immediate coverage
+
+Checked:
+
+- positive immediate
+- zero immediate
+- negative immediate
+
+
+4. Register destination coverage
+
+Checked:
+
+- write attempt to register $zero
+- normal register write
+
+
+5. Memory coverage
+
+Checked:
+
+- zero address access
+- non-zero address access
+
+## Result
+
+Transactions observed: 19
+
+Transactions checked: 19
+
+Scoreboard errors: 0
+
+
+Functional coverage:
+
+Operations:
+100%
+
+Branch:
+100%
+
+Immediate:
+100%
+
+Register:
+100%
+
+Memory:
+100%
+
+
+Result:
+
+ALL MIPS TESTS PASSED
+
+Coverage is implemented manually using counters
+because the current Questa Starter environment has limitations
+for native SystemVerilog coverage features.

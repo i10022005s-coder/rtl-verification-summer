@@ -3,6 +3,7 @@ package mips_environment_pkg;
 
     import mips_monitor_pkg::*;
     import mips_scoreboard_pkg::*;
+    import mips_coverage_pkg::*;
 
     class mips_environment;
         virtual mips_if vif;
@@ -11,6 +12,7 @@ package mips_environment_pkg;
 
         mips_monitor monitor;
         mips_scoreboard scoreboard;
+        mips_coverage coverage;
         
         mailbox #(mips_transaction) mon2scb;
         mailbox #(mips_transaction) mon2cov;
@@ -29,15 +31,19 @@ package mips_environment_pkg;
 
             monitor = new(vif, mon2scb, mon2cov, transaction_count);
             scoreboard = new(mon2scb, transaction_count);
+            coverage = new(mon2cov, transaction_count);
         endfunction
 
         task run();
             fork
                 monitor.run();
                 scoreboard.run();
+                coverage.run();
             join
             errors = scoreboard.errors;
             environment_check();
+
+            coverage.report();
 
             summary();
         endtask 
