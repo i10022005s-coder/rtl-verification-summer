@@ -1321,3 +1321,92 @@ ALL MIPS TESTS PASSED
 Coverage is implemented manually using counters
 because the current Questa Starter environment has limitations
 for native SystemVerilog coverage features.
+
+## Week 4 — Day 7: Assertion-Based Verification
+
+Added assertion-based verification to the MIPS verification environment.
+
+Assertions are implemented in a separate verification checker module and
+observe the processor through `mips_if`.
+
+Implemented checks:
+
+- reset forces the program counter to the reset value;
+- PC remains aligned to a 4-byte instruction boundary;
+- reading register `$zero` produces zero;
+- register-write transactions contain valid address/data values and use the
+  correct destination field;
+- memory writes contain valid address and write-data values;
+- register and memory write-enable signals never contain unknown values.
+
+The assertion checker maintains a separate assertion error counter which is
+combined with the self-checking environment result.
+
+Current verification result requires both:
+
+- scoreboard errors = 0;
+- assertion errors = 0.
+
+### Mutation testing
+
+Assertion operation was verified by intentionally introducing an incorrect
+PC update into the DUT.
+
+The modified DUT produced:
+
+- PC alignment assertion failures;
+- PC mismatches in the scoreboard;
+- failing verification result.
+
+After restoring the correct RTL:
+
+- all monitored transactions were checked successfully;
+- scoreboard errors returned to zero;
+- assertion errors returned to zero;
+- functional coverage remained at the target;
+- the complete MIPS test passed.
+
+This demonstrates that the assertions are capable of detecting intentionally
+introduced RTL faults rather than only passing on the correct implementation.
+
+## Week 4 Summary — MIPS Verification
+
+A transaction-based self-checking verification environment was developed for
+the single-cycle MIPS processor.
+
+Implemented verification components:
+
+- `mips_if` — verification interface;
+- `mips_transaction` — architectural instruction transaction;
+- `mips_monitor` — passive processor monitor;
+- `mips_reference_model` — independent ISA-level reference model;
+- `mips_scoreboard` — automatic actual/expected comparison;
+- `mips_environment` — verification component integration;
+- directed instruction regression;
+- manual functional coverage;
+- SystemVerilog assertions.
+
+The environment verifies the supported instruction subset:
+
+- ADD;
+- SUB;
+- AND;
+- OR;
+- SLT;
+- ADDI;
+- LW;
+- SW;
+- BEQ.
+
+The verification flow now provides three complementary mechanisms:
+
+- **Scoreboard** — checks functional correctness;
+- **Coverage** — measures which scenarios were exercised;
+- **Assertions** — check design invariants and signal/protocol properties.
+
+Final directed regression result:
+
+- all transactions checked;
+- zero scoreboard errors;
+- zero assertion errors;
+- functional coverage target reached.

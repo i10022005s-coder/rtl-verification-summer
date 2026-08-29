@@ -359,6 +359,25 @@ mips_day6:
 
 	cd $(WEEK4) && vsimw -c work.mips_tb6 -do "run -all; quit -f"
 
+.PHONY: mips_day7
+
+mips_day7:
+	rm -rf $(WEEK4)/work
+	cd $(WEEK4) && vlibw work
+	cd $(WEEK4) && vlogw -sv -work work \
+		tb/transactions/mips_transaction.sv \
+		tb/interfaces/mips_if.sv \
+		tb/components/mips_monitor.sv \
+		tb/components/mips_reference_model.sv \
+		tb/components/mips_scoreboard.sv \
+		tb/coverage/mips_manual_coverage.sv \
+		tb/environment/mips_environment.sv \
+		rtl/*.sv \
+		tb/assertions/mips_assertions.sv \
+		tb/top/mips_day7_tb.sv
+
+	cd $(WEEK4) && vsimw -c work.mips_tb7 -do "run -all; quit -f"
+
 .PHONY: clean_week4
 
 clean_week4:
