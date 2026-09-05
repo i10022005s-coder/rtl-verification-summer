@@ -40,7 +40,7 @@ package mips_monitor_pkg;
                 tr.we_mem = vif.we_mem;
                 tr.wd_mem = vif.wd_mem;
                 tr.address_mem = vif.address_mem;
-                tr.rd_mem = vif.rd_mem;
+                //tr.rd_mem = vif.rd_mem;
                 tr.id = i;
                 tr.decode();
 

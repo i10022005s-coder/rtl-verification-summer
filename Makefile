@@ -142,31 +142,31 @@ WEEK3 = week03_sv_verification
 fifo_week3:
 	rm -rf $(WEEK3)/work
 	mkdir -p $(WEEK3)/sim
-	cd $(WEEK3) && vlibw work
-	cd $(WEEK3) && vlogw -sv \
+	cd $(WEEK3) && vlib work
+	cd $(WEEK3) && vlog -sv \
 		tb/transactions/fifo_transaction.sv \
 		tb/interfaces/fifo_if.sv \
 		rtl/sync_fifo.sv \
 		tb/top/fifo_tb.sv
-	cd $(WEEK3) && vsimw -c work.fifo_tb \
+	cd $(WEEK3) && vsim -c work.fifo_tb \
 		-do "run -all; quit -f"
 
 fifo_day2:
 	rm -rf $(WEEK3)/work
-	cd $(WEEK3) && vlibw work
-	cd $(WEEK3) && vlogw -sv \
+	cd $(WEEK3) && vlib work
+	cd $(WEEK3) && vlog -sv \
 		tb/transactions/fifo_transaction.sv \
 		tb/interfaces/fifo_if.sv \
 		tb/components/fifo_generator.sv \
 		tb/components/fifo_driver.sv \
 		rtl/sync_fifo.sv \
 		tb/top/fifo_tb2.sv
-	cd $(WEEK3) && vsimw -c work.fifo_tb2 \
+	cd $(WEEK3) && vsim -c work.fifo_tb2 \
 		-do "run -all; quit -f"
 fifo_day3:
 	rm -rf $(WEEK3)/work
-	cd $(WEEK3) && vlibw work
-	cd $(WEEK3) && vlogw -sv \
+	cd $(WEEK3) && vlib work
+	cd $(WEEK3) && vlog -sv \
 		tb/transactions/fifo_transaction.sv \
 		tb/interfaces/fifo_if.sv \
 		rtl/sync_fifo.sv \
@@ -176,12 +176,12 @@ fifo_day3:
 		tb/components/fifo_scoreboard.sv \
 		tb/environment/fifo_environment.sv \
 		tb/top/fifo_tb3.sv
-	cd $(WEEK3) && vsimw -c work.fifo_tb3 \
+	cd $(WEEK3) && vsim -c work.fifo_tb3 \
 		-do "run -all; quit -f"
 fifo_day4:
 	rm -rf $(WEEK3)/work
-	cd $(WEEK3) && vlibw work
-	cd $(WEEK3) && vlogw -sv \
+	cd $(WEEK3) && vlib work
+	cd $(WEEK3) && vlog -sv \
 		tb/transactions/fifo_transaction.sv \
 		tb/interfaces/fifo_if.sv \
 		rtl/sync_fifo.sv \
@@ -191,12 +191,12 @@ fifo_day4:
 		tb/components/fifo_scoreboard.sv \
 		tb/environment/fifo_environment.sv \
 		tb/top/fifo_tb4.sv
-	cd $(WEEK3) && vsimw -c work.fifo_tb4 \
+	cd $(WEEK3) && vsim -c work.fifo_tb4 \
 		-do "run -all; quit -f"
 fifo_day5:
 	rm -rf $(WEEK3)/work
-	cd $(WEEK3) && vlibw work
-	cd $(WEEK3) && vlogw -sv \
+	cd $(WEEK3) && vlib work
+	cd $(WEEK3) && vlog -sv \
 		tb/transactions/fifo_transaction.sv \
 		tb/interfaces/fifo_if.sv \
 		rtl/sync_fifo.sv \
@@ -207,14 +207,14 @@ fifo_day5:
 		tb/components/fifo_manual_coverage.sv \
 		tb/environment/fifo_environment.sv \
 		tb/top/fifo_tb5.sv
-	cd $(WEEK3) && vsimw -c work.fifo_tb5 \
+	cd $(WEEK3) && vsim -c work.fifo_tb5 \
 		-do "run -all; quit -f"
 .PHONY: fifo_day6
 
 fifo_day6:
 	rm -rf $(WEEK3)/work
-	cd $(WEEK3) && vlibw work
-	cd $(WEEK3) && vlogw -sv \
+	cd $(WEEK3) && vlib work
+	cd $(WEEK3) && vlog -sv \
 		tb/transactions/fifo_transaction.sv \
 		tb/interfaces/fifo_if.sv \
 		rtl/sync_fifo.sv \
@@ -226,7 +226,7 @@ fifo_day6:
 		tb/environment/fifo_environment.sv \
 		tb/assertion/fifo_assertion.sv \
 		tb/top/fifo_tb6.sv
-	cd $(WEEK3) && vsimw -c work.fifo_tb6 \
+	cd $(WEEK3) && vsim -c work.fifo_tb6 \
 		-do "run -all; quit -f"
 
 REGRESSION_SEEDS := 10000 10001 10002 10003 10004
@@ -236,8 +236,8 @@ SEED ?= 12345
 
 fifo_day7_compile:
 	rm -rf $(WEEK3)/work
-	cd $(WEEK3) && vlibw work
-	cd $(WEEK3) && vlogw -sv \
+	cd $(WEEK3) && vlib work
+	cd $(WEEK3) && vlog -sv \
 		tb/transactions/fifo_transaction.sv \
 		tb/interfaces/fifo_if.sv \
 		rtl/sync_fifo.sv \
@@ -251,7 +251,7 @@ fifo_day7_compile:
 		tb/top/fifo_tb7.sv
 
 fifo_day7: fifo_day7_compile
-	cd $(WEEK3) && vsimw -c work.fifo_tb7 +SEED=$(SEED) \
+	cd $(WEEK3) && vsim -c work.fifo_tb7 +SEED=$(SEED) \
 		-do "run -all; quit -f"
 
 fifo_regression: fifo_day7_compile
@@ -259,7 +259,7 @@ fifo_regression: fifo_day7_compile
 	@passed=0; failed=0; \
 	for seed in $(REGRESSION_SEEDS); do \
 		printf "Seed %s ... " $$seed; \
-		if (cd $(WEEK3) && vsimw -c work.fifo_tb7 +SEED=$$seed \
+		if (cd $(WEEK3) && vsim -c work.fifo_tb7 +SEED=$$seed \
 			-do "run -all; quit -f" \
 			> sim/logs/seed_$$seed.log 2>&1); then \
 			echo "PASS"; \
@@ -304,15 +304,15 @@ mips_day2:
 		rtl/instr_mem.sv \
 		rtl/mips_system.sv \
 		tb/top/mips_day2_tb.sv
-	cd $(WEEK4) && vsimw -c work.mips_tb \
+	cd $(WEEK4) && vsim -c work.mips_tb \
 		-do "run -all; quit -f"
 
 .PHONY: mips_day4
 
 mips_day4:
 	rm -rf $(WEEK4)/work
-	cd $(WEEK4) && vlibw work
-	cd $(WEEK4) && vlogw -sv -work work \
+	cd $(WEEK4) && vlib work
+	cd $(WEEK4) && vlog -sv -work work \
 		tb/transactions/mips_transaction.sv \
 		tb/interfaces/mips_if.sv \
 		tb/components/mips_monitor.sv \
@@ -322,14 +322,14 @@ mips_day4:
 		rtl/*.sv \
 		tb/top/mips_day4_tb.sv
 
-	cd $(WEEK4) && vsimw -c work.mips_tb4 -do "run -all; quit -f"
+	cd $(WEEK4) && vsim -c work.mips_tb4 -do "run -all; quit -f"
 
 .PHONY: mips_day5
 
 mips_day5:
 	rm -rf $(WEEK4)/work
-	cd $(WEEK4) && vlibw work
-	cd $(WEEK4) && vlogw -sv -work work \
+	cd $(WEEK4) && vlib work
+	cd $(WEEK4) && vlog -sv -work work \
 		tb/transactions/mips_transaction.sv \
 		tb/interfaces/mips_if.sv \
 		tb/components/mips_monitor.sv \
@@ -339,14 +339,14 @@ mips_day5:
 		rtl/*.sv \
 		tb/top/mips_day5_tb.sv
 
-	cd $(WEEK4) && vsimw -c work.mips_tb5 -do "run -all; quit -f"
+	cd $(WEEK4) && vsim -c work.mips_tb5 -do "run -all; quit -f"
 
 .PHONY: mips_day6
 
 mips_day6:
 	rm -rf $(WEEK4)/work
-	cd $(WEEK4) && vlibw work
-	cd $(WEEK4) && vlogw -sv -work work \
+	cd $(WEEK4) && vlib work
+	cd $(WEEK4) && vlog -sv -work work \
 		tb/transactions/mips_transaction.sv \
 		tb/interfaces/mips_if.sv \
 		tb/components/mips_monitor.sv \
@@ -357,14 +357,14 @@ mips_day6:
 		rtl/*.sv \
 		tb/top/mips_day6_tb.sv
 
-	cd $(WEEK4) && vsimw -c work.mips_tb6 -do "run -all; quit -f"
+	cd $(WEEK4) && vsim -c work.mips_tb6 -do "run -all; quit -f"
 
 .PHONY: mips_day7
 
 mips_day7:
 	rm -rf $(WEEK4)/work
-	cd $(WEEK4) && vlibw work
-	cd $(WEEK4) && vlogw -sv -work work \
+	cd $(WEEK4) && vlib work
+	cd $(WEEK4) && vlog -sv -work work \
 		tb/transactions/mips_transaction.sv \
 		tb/interfaces/mips_if.sv \
 		tb/components/mips_monitor.sv \
@@ -376,7 +376,7 @@ mips_day7:
 		tb/assertions/mips_assertions.sv \
 		tb/top/mips_day7_tb.sv
 
-	cd $(WEEK4) && vsimw -c work.mips_tb7 -do "run -all; quit -f"
+	cd $(WEEK4) && vsim -c work.mips_tb7 -do "run -all; quit -f"
 
 .PHONY: clean_week4
 
@@ -385,3 +385,4 @@ clean_week4:
 	rm -f $(WEEK4)/transcript
 	rm -f $(WEEK4)/vsim.wlf
 	rm -f $(WEEK4)/sim/*.vcd
+
